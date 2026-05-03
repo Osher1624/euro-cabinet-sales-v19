@@ -1,0 +1,135 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<odoo>
+    <record id="product_template_form_view" model="ir.ui.view">
+        <field name="name">product.template.common.form</field>
+        <field name="model">product.template</field>
+        <field name="inherit_id" ref="product.product_template_form_view" />
+        <field name="arch" type="xml">
+            <xpath expr="//field[@name='uom_po_id']" position="after">
+                <field name="width" />
+                <field name="height" />
+                <field name="depth" />
+            </xpath>
+        </field>
+    </record>
+    <record id="product_template_tree_view" model="ir.ui.view">
+        <field name="name">product.template.product.tree</field>
+        <field name="model">product.template</field>
+        <field name="active" eval="True" />
+        <field name="inherit_id" ref="product.product_template_tree_view" />
+        <field name="arch" type="xml">
+            <xpath expr="//field[@name='responsible_id']" position="replace" />
+            <xpath expr="//field[@name='name']" position="replace" />
+            <xpath expr="//field[@name='standard_price']" position="replace" />
+            <xpath expr="//field[@name='priority']" position="after">
+                <field name="id" optional="show" />
+                <field name="create_date" optional="show" />
+                <field name="name" string="Product Name" />
+                <field name="number_of_doors" optional="show" string="Doors" />
+                <field name="number_of_drawers" optional="show" string="Drawers" />
+                <field name="width" optional="show" />
+                <field name="height" optional="show" />
+                <field name="depth" optional="show" />
+                <field name="brand_id" optional="show" />
+            </xpath>
+            <xpath expr="//field[@name='list_price']" position="replace">
+                <field
+                    name="standard_price"
+                    widget="monetary"
+                    options="{'currency_field': 'cost_currency_id'}"
+                    optional="show"
+                    readonly="1"
+                />
+                <field
+                    name="list_price"
+                    string="Sales Price"
+                    widget="monetary"
+                    options="{'currency_field': 'currency_id'}"
+                    optional="show"
+                    decoration-muted="not sale_ok"
+                />
+                <field name="purchased_product_qty" optional="show" />
+                <field name="sales_count" optional="show" />
+            </xpath>
+        </field>
+    </record>
+
+    <record id="product_template_kanban_view" model="ir.ui.view">
+        <field name="name">Product.template.product.kanban</field>
+        <field name="model">product.template</field>
+        <field name="inherit_id" ref="product.product_template_kanban_view" />
+        <field name="arch" type="xml">
+            <xpath expr="//field[@name='list_price']" position="after">
+                <field name="public_categ_ids" display="full" />
+            </xpath>
+            <xpath expr="//field[@name='uom_id']" position="after">
+                <field name="categ_id" display="full" />
+            </xpath>
+        </field>
+    </record>
+
+    <record id="product_template_search_view" model="ir.ui.view">
+        <field name="name">product.template.search</field>
+        <field name="model">product.template</field>
+        <field name="inherit_id" ref="product.product_template_search_view" />
+        <field name="arch" type="xml">
+            <xpath expr="//field[@name='name']" position="after">
+                <field name="brand_id" />
+                <field name="product_tag_ids" />
+            </xpath>
+        </field>
+    </record>
+
+    <record id="product_template_only_form_view" model="ir.ui.view">
+        <field name="name">product.template.product.form</field>
+        <field name="model">product.template</field>
+        <field name="inherit_id" ref="product.product_template_only_form_view" />
+        <field name="arch" type="xml">
+            <xpath expr="//field[@name='product_tag_ids']" position="after">
+                <field name="number_of_doors" />
+                <field name="number_of_drawers" />
+            </xpath>
+            <xpath expr="//field[@name='value_ids']" position="attributes">
+                <attribute
+                    name="domain"
+                >[('attribute_id', "=", attribute_id)]</attribute>
+            </xpath>
+            <xpath expr="//page[@name='variants']" position="after">
+                <page name="attribute_value_setup" string="Attribute Value Setup">
+                    <field
+                        name="attribute_value_setup_ids"
+                        widget="one2many"
+                        context="{'show_attribute': False}"
+                    >
+                        <tree editable="bottom">
+                            <field
+                                name="attribute_id"
+                                options="{'no_create_edit': True,'no_create': True, 'no_quick_create': True, 'no_open': True}"
+                            />
+                            <field
+                                name="value_ids"
+                                domain="[('attribute_id', '=', attribute_id)]"
+                                widget="many2many_tags"
+                                options="{'no_create_edit': True,'no_create': True, 'no_quick_create': True, 'no_open': True, 'color_field': 'color'}"
+                                context="{'default_attribute_id': attribute_id, 'show_attribute': False}"
+                            />
+                        </tree>
+                    </field>
+                </page>
+            </xpath>
+        </field>
+    </record>
+
+    <record
+        id="model_product_template_bom_line_apply_on_variants"
+        model="ir.actions.server"
+    >
+        <field name="name">Update BoM Variants</field>
+        <field name="model_id" ref="product.model_product_template" />
+        <field name="binding_model_id" ref="product.model_product_template" />
+        <field name="binding_view_types">form</field>
+        <field name="state">code</field>
+        <field name="code">records.update_bom_lines_variants()</field>
+    </record>
+
+</odoo>
