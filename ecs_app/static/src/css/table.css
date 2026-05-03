@@ -1,0 +1,11 @@
+/* Apply border styles to table elements */
+thead,
+tbody,
+tfoot,
+tr,
+th,
+td {
+    border-color: inherit;
+    border-style: solid;
+    border-width: 1px;
+}
