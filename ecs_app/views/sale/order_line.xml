@@ -1,0 +1,93 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<odoo>
+    <record id="view_order_line_tree" model="ir.ui.view">
+        <field name="name">sale.order.line.tree</field>
+        <field name="model">sale.order.line</field>
+        <field name="priority">99</field>
+        <field name="inherit_id" ref="sale.view_order_line_tree" />
+        <field name="arch" type="xml">
+            <xpath expr="//field[@name='name']" position="replace">
+                <field name="description" />
+                <field name="configuration" />
+            </xpath>
+        </field>
+    </record>
+
+    <record id="direct_order_line_view_tree" model="ir.ui.view">
+        <field name="name">direct_order_line_view_tree</field>
+        <field name="model">sale.order.line</field>
+        <field name="arch" type="xml">
+            <tree>
+                <button
+                    name="action_open_order"
+                    type="object"
+                    class="fw-bolder btn btn-primary d-grid gap-2 col-12 mx-auto float-center"
+                    string="Open Order"
+                />
+                <field name="order_id" string="Order #" decoration-bf="1" />
+                <field name="product_template_id" class="set_width_90px" />
+                <field name="description" class="text-wrap" />
+                <field name="configuration" />
+                <field
+                    name="product_uom_qty"
+                    decoration-info="(not display_type and invoice_status == 'to invoice')"
+                    decoration-bf="(not display_type and invoice_status == 'to invoice')"
+                    context="{'partner_id': parent.partner_id,'quantity': product_uom_qty,
+                        'pricelist': parent.pricelist_id,'uom': product_uom,
+                        'company_id': parent.company_id}"
+                />
+                <field
+                    name="qty_delivered"
+                    decoration-info="(not display_type and invoice_status == 'to invoice')"
+                    decoration-bf="(not display_type and invoice_status == 'to invoice')"
+                    string="DLV QTY"
+                    attrs="{'column_invisible': [('parent.state', 'not in', ['sale', 'done'])],
+                        'readonly': [('qty_delivered_method', '!=', 'manual')]}"
+                    optional="show"
+                />
+                <field name="qty_delivered_method" invisible="1" />
+                <field
+                    name="qty_invoiced"
+                    decoration-info="(not display_type and invoice_status == 'to invoice')"
+                    decoration-bf="(not display_type and invoice_status == 'to invoice')"
+                    string="INV QTY"
+                    attrs="{'column_invisible': [('parent.state', 'not in', ['sale', 'done'])]}"
+                    optional="show"
+                />
+                <field name="qty_to_invoice" invisible="1" />
+                <field name="product_uom" string="UoM" optional="show" />
+                <field
+                    name="price_unit"
+                    attrs="{'readonly': [('qty_invoiced', '&gt;', 0)]}"
+                />
+                <field name="purchase_price" optional="show" />
+                <field name="price_subtotal" optional="show" />
+                <field name="price_total" optional="show" />
+                <field name="state" invisible="1" />
+                <field name="display_type" invisible="1" />
+                <field name="invoice_status" invisible="1" />
+                <field name="currency_id" invisible="1" />
+                <field name="price_tax" invisible="1" />
+            </tree>
+        </field>
+    </record>
+
+    <record id="direct_order_line_action" model="ir.actions.act_window">
+        <field name="name">Order Lines</field>
+        <field name="type">ir.actions.act_window</field>
+        <field name="res_model">sale.order.line</field>
+        <field name="view_mode">tree,form</field>
+        <field name="view_id" ref="direct_order_line_view_tree" />
+        <field name="domain">[('display_type', '=', False)]</field>
+        <field name="context">{'create': False, 'edit': False,
+            'copy': False, 'delete': False}</field>
+    </record>
+
+    <menuitem
+        id="direct_order_line_menu"
+        parent="sale.sale_order_menu"
+        action="direct_order_line_action"
+        sequence="21"
+    />
+
+</odoo>
