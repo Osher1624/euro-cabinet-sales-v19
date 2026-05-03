@@ -1,29 +1,11 @@
 <?xml version="1.0" encoding="utf-8"?>
 <odoo>
     <data>
-        <!-- INHERITED CONFIGURE OPTIONAL PRODUCT TEMPLATE -->
-        <template id="configure_optional_products_inherit_ecs" 
-            inherit_id="sale_product_configurator.configure_optional_products">
-            <t t-set="product" t-value="product.product_tmpl_id" position="after">
-                <t t-set="sale_attribute_ids" t-value="sale_attribute_ids"/>
-            </t>   
-        </template>
-
-        <!-- INHERITED VARIANTS TEMPLATE -->
-        <!-- <template id="variants_inherit_ecs" inherit_id="sale.variants">
-            <t t-set="attribute_exclusions" position="after">
-                <t t-if="sale_attribute_ids">
-                    <t t-set="attibute_ids" t-value="sale_attribute_ids.mapped('product_attribute_id')"/>
-                    <t t-set="valid_product_template_attribute_line_ids" 
-                        t-value="product.valid_product_template_attribute_line_ids.filtered(lambda l: l.attribute_id.id in attibute_ids.ids)"/>
-                </t><t t-else="">
-                    <t t-set="valid_product_template_attribute_line_ids" 
-                        t-value="product.valid_product_template_attribute_line_ids"/>
-                </t>
-            </t>
-            <t t-foreach="product.valid_product_template_attribute_line_ids" position="attributes">
-                <attribute name="t-foreach">valid_product_template_attribute_line_ids</attribute>
-            </t>
-        </template> -->
+        <!--
+        NOTE: In Odoo 17+, the product configurator was rewritten as a pure OWL
+        component. The QWeb template 'sale_product_configurator.configure_optional_products'
+        no longer exists. The sale_attribute_ids pre-filling logic is now handled
+        in the ecs_sale_product_configurator JS module via the OWL component patch.
+        -->
     </data>
 </odoo>
