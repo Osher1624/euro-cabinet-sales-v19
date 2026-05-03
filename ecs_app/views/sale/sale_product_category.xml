@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<odoo>
+    <data>
+        <record id="sale_product_category_view" model="ir.ui.view">
+            <field name="name">sale.product.category.view</field>
+            <field name="model">sale.order</field>
+            <field
+                name="inherit_id"
+                ref="ecs_sale_product_configurator.view_order_form_inherit_ecs"
+            />
+            <field name="arch" type="xml">
+                <xpath
+                    expr="//field[@name='sale_attribute_ids']/tree//field[@name='attribute_value_id']"
+                    position="after"
+                >
+                    <field name="is_custom" invisible="1" />
+                    <field
+                        name="custom_value"
+                        attrs="{'readonly': [('is_custom', '=', False)]}"
+                    />
+                </xpath>
+            </field>
+        </record>
+    </data>
+</odoo>
