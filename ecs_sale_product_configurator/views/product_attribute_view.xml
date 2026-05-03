@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data>
+        <!-- INHERITED PRODUCT ATTRIBUTE FORM VIEW -->
+        <record id="product_attribute_view_form_inherti_ecs" model="ir.ui.view">
+            <field name="name">product.attribute.view.form</field>
+            <field name="model">product.attribute</field>
+            <field name="inherit_id" ref="product.product_attribute_view_form"/>
+            <field name="arch" type="xml">
+                <field name="create_variant" position="after">
+                    <field name="product_category_ids" invisible="1"/>
+                </field>
+            </field>
+        </record>
+    </data>
+</odoo>
