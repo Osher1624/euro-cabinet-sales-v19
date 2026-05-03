@@ -1,0 +1,74 @@
+/* Target table headers with specific data attributes in the sale.order.line context */
+th[data-name="name"][data-tooltip-info*='"resModel":"sale.order.line"'] {
+    width: 1px !important;
+}
+
+/* Style children of the targeted table headers */
+th[data-name="name"][data-tooltip-info*='"resModel":"sale.order.line"'] input {
+    width: inherit;
+}
+
+/* Hide table cells with the class "hide_column" under specific conditions */
+tr:not(.o_is_line_section):not(.o_is_line_note) td.hide_column {
+    width: 1px !important;
+}
+
+/* Set specific widths for columns in the sale.order.line context */
+th[data-tooltip-info*='"resModel":"sale.order.line"'] {
+    min-width: unset; /* Reset min-width */
+    width: unset; /* Reset width */
+}
+
+th[data-name="line_number"][data-tooltip-info*='"resModel":"sale.order.line"'] {
+    min-width: 85px !important;
+    width: 85px !important;
+}
+
+th[data-name="description"][data-tooltip-info*='"resModel":"sale.order.line"'] {
+    min-width: 470px !important;
+    width: 470px !important;
+}
+
+th[data-name="configuration"][data-tooltip-info*='"resModel":"sale.order.line"'] {
+    min-width: 200px !important;
+    width: 200px !important;
+}
+
+th[data-name="product_uom"][data-tooltip-info*='"resModel":"sale.order.line"'],
+th[data-name="product_uom_qty"][data-tooltip-info*='"resModel":"sale.order.line"'],
+th[data-name="qty_delivered"][data-tooltip-info*='"resModel":"sale.order.line"'],
+th[data-name="qty_invoiced"][data-tooltip-info*='"resModel":"sale.order.line"'],
+th[data-name="price_unit"][data-tooltip-info*='"resModel":"sale.order.line"'] {
+    min-width: 70px !important;
+    width: 70px !important;
+}
+th[data-name="sequence"][data-tooltip-info*='"resModel":"sale.order.line"'] {
+    min-width: 4px !important;
+    width: 4px !important;
+}
+th[data-name="order_id"][data-tooltip-info*='"resModel":"sale.order.line"'],
+th[data-name="price_total"][data-tooltip-info*='"resModel":"sale.order.line"'],
+th[data-name="price_subtotal"][data-tooltip-info*='"resModel":"sale.order.line"'] {
+    min-width: 100px !important;
+    width: 100px !important;
+}
+
+th[data-name="product_template_id"][data-tooltip-*='"resModel":"sale.order.line"'],
+th[data-name="product_id"][data-tooltip-info*='"resModel":"sale.order.line"'] {
+    min-width: 90px !important;
+    width: 90px !important;
+}
+
+.set_width_90px {
+    min-width: 90px !important;
+    width: 90px !important;
+}
+
+th[data-name="product_id"][data-tooltip-info*='"resModel":"mrp.bom.template.line"'] {
+    min-width: 70% !important;
+    width: 70% !important;
+}
+/* Style the chatter container on the form renderer */
+.o_FormRenderer_chatterContainer.oe_chatter.o-aside {
+    max-width: 27%; /* Reduce the width of the Odoo side chatter for better UI/UX */
+}
