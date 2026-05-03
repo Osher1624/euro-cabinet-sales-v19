@@ -11,14 +11,14 @@
                     type="object"
                     string="Approve Estimation"
                     class="btn-primary"
-                    attrs="{'invisible': [('approved_estimation', '=', True)]}"
+                    invisible="[('approved_estimation', '=', True)]"
                 />
             </xpath>
             <xpath expr="//field[@name='user_ids']" position="after">
                 <field
                     name="estimated_hours"
                     widget="float_time"
-                    attrs="{'readonly': [('approved_estimation', '=', True)]}"
+                    readonly="[('approved_estimation', '=', True)]"
                 />
             </xpath>
             <xpath expr="//field[@name='description']" position="attributes">

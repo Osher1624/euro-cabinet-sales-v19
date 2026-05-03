@@ -13,7 +13,7 @@
                         name="process_boms"
                         type="object"
                         string="Process BoM"
-                        attrs="{'invisible': ['|', ('is_readonly', '=', True), ('is_a_template', '=', True)]}"
+                        invisible="['|', ('is_readonly', '=', True), ('is_a_template', '=', True)]"
                     />
                 </header>
                 <sheet>
@@ -23,7 +23,7 @@
                             name="web_ribbon"
                             title="Archived"
                             bg_color="bg-danger"
-                            attrs="{'invisible': [('active', '=', True)]}"
+                            invisible="[('active', '=', True)]"
                         />
                         <button
                             name="toggle_active"
@@ -31,7 +31,7 @@
                             groups="base.group_user"
                             class="oe_stat_button"
                             icon="fa-archive"
-                            attrs="{'invisible': [('is_a_template', '!=', True)]}"
+                            invisible="[('is_a_template', '!=', True)]"
                         >
                             <field
                                 name="active"
@@ -45,7 +45,7 @@
                             type="object"
                             name="action_view_mrp_bom"
                             icon="fa-flask"
-                            attrs="{'invisible': [('bom_count', '=', 0)]}"
+                            invisible="[('bom_count', '=', 0)]"
                         >
                             <field
                                 string="View BoM"
@@ -56,15 +56,15 @@
                     </div>
                     <div
                         class="oe_title"
-                        attrs="{'invisible': [('is_a_template', '!=', True)]}"
+                        invisible="[('is_a_template', '!=', True)]"
                     >
                         <h1
-                            attrs="{'invisible': [('id', '!=', False)]}"
+                            invisible="[('id', '!=', False)]"
                         >New BoM Template</h1>
                         <h1>
                             <field
                                 name="name"
-                                attrs="{'readonly': [('is_a_template', '=', True)]}"
+                                readonly="[('is_a_template', '=', True)]"
                             />
                         </h1>
                     </div>
@@ -73,20 +73,24 @@
                             name="bom_template_id"
                             domain="[('is_a_template', '=', True)]"
                             options="{'no_create_edit': True,'no_create': True, 'no_quick_create': True, 'no_open': True}"
-                            attrs="{'readonly': [('id', '!=', False)], 'invisible': [('is_a_template', '=', True)], 'required': [('is_a_template', '!=', True)]}"
+                            readonly="[('id', '!=', False)]"
+                            invisible="[('is_a_template', '=', True)]"
+                            required="[('is_a_template', '!=', True)]"
                         />
                         <field
                             name="product_tmpl_ids"
                             widget="many2many_tags"
                             options="{'no_create_edit': True,'no_create': True, 'no_quick_create': True, 'no_open': True}"
-                            attrs="{'readonly': [('bom_count', '!=', 0)], 'invisible': [('is_a_template', '=', True)], 'required': [('is_a_template', '!=', True)]}"
+                            readonly="[('bom_count', '!=', 0)]"
+                            invisible="[('is_a_template', '=', True)]"
+                            required="[('is_a_template', '!=', True)]"
                         />
                     </group>
                     <notebook>
                         <page string="Components" name="components">
                             <field
                                 name="bom_template_line_ids"
-                                attrs="{'readonly': [('is_readonly', '=', True)]}"
+                                readonly="[('is_readonly', '=', True)]"
                             >
                                 <tree>
                                     <field
@@ -153,7 +157,7 @@
                         <page
                             name="ref_qty_bom"
                             string="Reference QTY BoM"
-                            attrs="{'invisible': [('bom_count', '&lt;', 1)]}"
+                            invisible="[('bom_count', '&lt;', 1)]"
                         >
                             <field name="ref_qty_bom_ids" readonly="1">
                                 <tree>
@@ -166,7 +170,7 @@
                         <page
                             name="default_qty_bom"
                             string="Default QTY BoM"
-                            attrs="{'invisible': [('bom_count', '&lt;', 1)]}"
+                            invisible="[('bom_count', '&lt;', 1)]"
                         >
                             <field name="default_qty_bom_ids" readonly="1">
                                 <tree>

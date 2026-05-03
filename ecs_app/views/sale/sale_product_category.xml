@@ -16,7 +16,7 @@
                     <field name="is_custom" invisible="1" />
                     <field
                         name="custom_value"
-                        attrs="{'readonly': [('is_custom', '=', False)]}"
+                        readonly="[('is_custom', '=', False)]"
                     />
                 </xpath>
             </field>

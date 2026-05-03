@@ -19,7 +19,7 @@
                     name="verify_order"
                     type="object"
                     string="Verify Order"
-                    attrs="{'invisible': ['|',('is_verified', '=', True), ('state', 'not in', ('draft','sent'))]}"
+                    invisible="['|',('is_verified', '=', True), ('state', 'not in', ('draft','sent'))]"
                 />
             </xpath>
             <xpath expr="//field[@name='sale_order_template_id']" position="attributes">
@@ -104,7 +104,7 @@
                     name="name"
                     class="hide_column"
                     required="0"
-                    attrs="{'invisible': [('display_type', 'not in', ('line_section', 'line_note'))]}"
+                    invisible="[('display_type', 'not in', ('line_section', 'line_note'))]"
                 />
                 <field name="description" class="text-wrap" />
                 <field name="configuration" />
@@ -172,7 +172,7 @@
                                 srting="Sections"
                                 widget="section_and_note_text"
                                 decoration-bf="1"
-                                attrs="{'invisible': [('display_type', 'not in', ('line_section', 'line_note'))]}"
+                                invisible="[('display_type', 'not in', ('line_section', 'line_note'))]"
                             />
                         </tree>
                     </field>
