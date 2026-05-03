@@ -1,0 +1,129 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<odoo>
+    <record id="paperformat_label_sheet_ecs_46" model="report.paperformat">
+        <field name="name">ECS 4x6 Label Sheet</field>
+        <field name="default" eval="True" />
+        <field name="format">custom</field>
+        <field name="page_height">153</field>
+        <field name="page_width">102</field>
+        <field name="orientation">Portrait</field>
+        <field name="margin_top">1</field>
+        <field name="margin_bottom">0</field>
+        <field name="margin_left">0</field>
+        <field name="margin_right">1</field>
+        <field name="disable_shrinking" eval="True" />
+        <field name="dpi">96</field>
+    </record>
+
+    <record id="report_product_template_label_ecs_46" model="ir.actions.report">
+        <field name="name">Product Label ECS</field>
+        <field name="model">product.product</field>
+        <field name="report_type">qweb-pdf</field>
+        <field name="report_name">ecs_app.report_simple_label_ecs_46</field>
+        <field name="report_file">ecs_app.report_simple_label_ecs_46</field>
+        <field name="paperformat_id" ref="ecs_app.paperformat_label_sheet_ecs_46" />
+        <field name="binding_model_id" eval="False" />
+        <field name="binding_type">report</field>
+    </record>
+
+    <template id="report_simple_label_ecs_46">
+        <t t-call="web.basic_layout">
+            <div class="page">
+                <t t-call="web.html_container">
+                    <t t-foreach="printable_lines" t-as="sml">
+                        <t t-set="qty_no" t-value="1" />
+                        <t t-set="qty_done" t-value="int(sml.qty_done)" />
+                        <t t-set="picking_id" t-value="sml.picking_id" />
+                        <t t-foreach="range(qty_done)" t-as="qty">
+                            <div
+                                class="shipping-label"
+                                style="border: 1px solid #000; width: 3.75in; height: 5.75in; margin-right: 20px; border-radius: 10px;"
+                            >
+                                <div
+                                    style="padding: 5px; margin-bottom: 5px; border-bottom: 1px solid #000;"
+                                >
+                                    <strong>Ship To:</strong>
+                                    <span t-esc="picking_id.partner_id.display_name" />
+                                    <span
+                                        class="d-block"
+                                        t-esc="picking_id.partner_id.street"
+                                    />
+                                    <span class="d-block">
+                                        <t
+                                            t-if="picking_id.partner_id.city"
+                                            t-esc="picking_id.partner_id.city"
+                                        />
+                                        <t
+                                            t-if="picking_id.partner_id.state_id"
+                                            t-esc="' ' + picking_id.partner_id.state_id.code"
+                                        />
+                                        <t
+                                            t-if="picking_id.partner_id.zip"
+                                            t-esc="' ' + picking_id.partner_id.zip"
+                                        />
+                                    </span>
+                                </div>
+                                <div
+                                    style="padding: 5px; border-bottom: 1px solid #000;"
+                                >
+                                    <strong>Customer Ref:</strong>
+                                    <span t-esc="picking_id.sale_id.client_order_ref" />
+                                </div>
+                                <div
+                                    style="padding: 5px; margin-bottom: 5px; border-bottom: 1px solid #000"
+                                >
+                                    <strong>Product:</strong>
+                                    <span
+                                        t-if="sml.product_id.description_sale"
+                                        t-esc="sml.product_id.display_name.replace(' (', ' - ' + sml.product_id.description_sale.split('\n')[0] + ' (')"
+                                    />
+                                    <span
+                                        t-if="not sml.product_id.description_sale"
+                                        t-esc="sml.product_id.display_name"
+                                    />
+                                    <span
+                                        class="d-block"
+                                        t-esc="sml.move_id.sale_line_id.configuration"
+                                    />
+                                </div>
+                                <div
+                                    style="text-align: center; padding: 5px; border-bottom: 1px solid #000;"
+                                >
+                                    <img
+                                        t-if="picking_id.group_id.name"
+                                        t-att-src="'/report/barcode/?barcode_type=%s&amp;value=%s&amp;width=%s&amp;height=%s&amp;humanreadable=1&amp;quiet=0' % ('Code128', picking_id.group_id.name+'L'+str(sml.move_id.sale_line_id.line_number), 330, 75)"
+                                        alt="Barcode"
+                                    />
+                                </div>
+                                <div
+                                    style="padding: 5px; border-bottom: 1px solid #000;"
+                                >
+                                    <div class="w-50 d-inline">
+                                        <strong>Label: </strong><span
+                                            t-esc="qty_no"
+                                        /> of <span t-esc="qty_done" />
+                                        <t t-set="qty_no" t-value="1 + qty_no" />
+                                    </div>
+                                    <div
+                                        class="w-50 d-inline"
+                                        style="margin-left: 50%;"
+                                    >
+                                        <strong>LN#: </strong><span
+                                            t-esc="sml.move_id.sale_line_id.line_number"
+                                        />
+                                    </div>
+                                </div>
+                                <div style=" padding: 5px;">
+                                    <strong>Shipped By:</strong>
+                                    <div
+                                        t-esc="picking_id.sale_id.partner_invoice_id.name"
+                                    />
+                                </div>
+                            </div>
+                        </t>
+                    </t>
+                </t>
+            </div>
+        </t>
+    </template>
+</odoo>
