@@ -1,0 +1,401 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<odoo>
+    <template id="payment" inherit_id="website_sale.payment" priority="99">
+        <xpath expr="//t[@t-set='additional_title']" position="replace">
+            <t t-set="additional_title">Shop - Create Quotation</t>
+        </xpath>
+        <xpath expr="//div[hasclass('js_payment')]" position="after">
+            <div class="d-flex justify-content-between">
+                <div class="float-left mt-2" t-if="website.checkout_skip_payment">
+                    <a role="button" href="/shop/checkout" class="btn btn-secondary">
+                        <i class="fa fa-chevron-left" />
+                        Return to Address
+                    </a>
+                </div>
+                <div
+                    class="js_skip_payment mt-3"
+                    t-if="website.checkout_skip_payment"
+                    id="skip_payment_method"
+                >
+                    <form
+                        target="_self"
+                        action="/shop/confirmation"
+                        method="post"
+                        class="float-right"
+                    >
+                        <input
+                            type="hidden"
+                            name="csrf_token"
+                            t-att-value="request.csrf_token()"
+                        />
+                        <a
+                            role="button"
+                            class="btn btn-secondary a-submit btn-lg"
+                            href="#"
+                        >
+                            <span
+                                t-if="not request.session.edit_order_id"
+                            >Create Quotation <span
+                                    class="fa fa-chevron-right"
+                                /></span>
+                            <span
+                                t-if="request.session.edit_order_id"
+                            >Update Quotation <span
+                                    class="fa fa-chevron-right"
+                                /></span>
+                        </a>
+                    </form>
+                </div>
+            </div>
+        </xpath>
+        <xpath expr="//t[@name='website_sale_non_free_cart']" position="attributes">
+          <attribute
+                name="t-if"
+                separator=" "
+                add="and not website.checkout_skip_payment"
+            />
+        </xpath>
+        <xpath expr="//div[hasclass('mt-2')]" position="attributes">
+          <attribute
+                name="t-if"
+                separator=" "
+                add="and not website.checkout_skip_payment"
+            />
+        </xpath>
+        <xpath expr="//div[hasclass('js_payment')]" position="attributes">
+            <attribute
+                name="t-if"
+                separator=" "
+                add="and not website.checkout_skip_payment"
+            />
+        </xpath>
+    </template>
+    <template id="confirmation" inherit_id="website_sale.confirmation" priority="99">
+        <xpath expr="//h1" position="replace">
+            <t t-if="website.checkout_skip_payment">
+                <h1 t-if="not edit_order_id" class="mt-3"><span>Quotation</span> <em
+                        t-field="order.name"
+                    /> <span>Created</span></h1>
+                <h1 t-if="edit_order_id" class="mt-3"><span>Quotation</span> <em
+                        t-field="order.name"
+                    /> <span>Updated</span></h1>
+            </t>
+            <t t-if="not website.checkout_skip_payment">
+                <h1><span>Order</span> <em t-field="order.name" /> <t
+                        t-if="order.state == 'sale'"
+                    ><span>Confirmed</span></t></h1>
+            </t>
+        </xpath>
+
+        <xpath expr="//h3[hasclass('mt-3')]" position="replace">
+            <div class="float-left mt-2 mb-3" t-if="website.checkout_skip_payment">
+                    <a role="button" href="/shop" class="btn btn-secondary btn-lg">
+                        <i class="fa fa-chevron-left" />
+                        Continue Shopping
+                    </a>
+                </div>
+        </xpath>
+        <xpath expr="//table[hasclass('table')]" position="attributes">
+            <attribute name="t-if">not website.checkout_skip_payment</attribute>
+        </xpath>
+
+        <xpath
+            expr='//t[@t-if="payment_tx_id.state == &apos;done&apos;"]'
+            position="attributes"
+        >
+            <attribute
+                name="t-if"
+            >payment_tx_id.state == 'done' or (website.checkout_skip_payment and order.state == 'sale')</attribute>
+        </xpath>
+        <xpath
+            expr="//t[@t-call='website_sale.payment_confirmation_status']"
+            position="after"
+        >
+            <div
+                class="alert alert-info"
+                role="alert"
+                t-if="website.checkout_skip_payment"
+            >
+                <span t-field="website.website_sale_checkout_skip_message" />
+            </div>
+        </xpath>
+        <!-- Hide payment related info if skip payment step -->
+        <xpath
+            expr="//t[@t-call='website_sale.payment_confirmation_status']"
+            position="attributes"
+        >
+            <attribute name="t-if">not website.checkout_skip_payment</attribute>
+        </xpath>
+    </template>
+    <template id="order_state_message">
+        <p>Your order is waiting manual confirmation.</p>
+        <br />
+    </template>
+    <template id="cart" inherit_id="website_sale.cart" priority="99">
+        <xpath expr="//a[hasclass('btn-primary')]//t[2]/span[1]" position="attributes">
+            <attribute name="t-if">not website.checkout_skip_payment</attribute>
+        </xpath>
+        <xpath expr="//a[hasclass('btn-primary')]//t[2]/span[1]" position="after">
+            <span t-if="website.checkout_skip_payment">Confirm</span>
+        </xpath>
+        <xpath expr="//t[@t-set='redirect_url']" position="replace">
+            <t
+                t-set="redirect_url"
+                t-value="'/web/login?redirect=/shop/checkout' if redirect_to_sign_in else '/shop/checkout'"
+            />
+        </xpath>
+    </template>
+    <template
+        id="short_cart_summary"
+        inherit_id="website_sale.short_cart_summary"
+        priority="99"
+    >
+        <xpath expr="//t[@t-set='redirect_url']" position="replace">
+            <t
+                t-set="redirect_url"
+                t-value="'/web/login?redirect=/shop/checkout' if redirect_to_sign_in else '/shop/checkout'"
+            />
+        </xpath>
+        <xpath
+            expr="//a[hasclass('btn-secondary')]//t[2]/span[1]"
+            position="attributes"
+        >
+            <attribute name="t-if">not website.checkout_skip_payment</attribute>
+        </xpath>
+        <xpath expr="//a[hasclass('btn-secondary')]//t[2]/span[1]" position="after">
+            <span t-if="website.checkout_skip_payment">Confirm</span>
+        </xpath>
+    </template>
+    <template id="cart_summary" inherit_id="website_sale.cart_summary">
+        <xpath
+            expr="//tr[@t-foreach='website_sale_order.website_order_line']"
+            position="attributes"
+        >
+            <attribute
+                name="t-foreach"
+            >website_sale_order.website_order_line.filtered(lambda sline: sline.product_uom_qty)</attribute>
+        </xpath>
+    </template>
+    <template
+        id="extra_info_option"
+        name="Rename Confirm order"
+        inherit_id="website_sale.wizard_checkout"
+        priority="99"
+    >
+            <xpath
+            expr="//div[@id='wizard-step40']/div[hasclass('progress-wizard-steplabel')]"
+            position="replace"
+        >
+                <div
+                t-if="not request.session.edit_order_id"
+                class="text-center progress-wizard-steplabel"
+            >Create Quotation
+                </div>
+                <div
+                t-if="request.session.edit_order_id"
+                class="text-center progress-wizard-steplabel"
+            >Update Quotation
+                </div>
+            </xpath>
+        </template>
+    <template
+        id="sale_order_portal_template"
+        priority="99"
+        inherit_id="sale.sale_order_portal_template"
+    >
+            <xpath
+            expr="//a[@t-if='sale_order._has_to_be_signed(True)']"
+            position="attributes"
+        >
+                <attribute name="t-if" separator=" " add="and sale_order.is_verified" />
+            </xpath>
+            <xpath
+            expr="//a[@t-elif='sale_order._has_to_be_paid(True)']"
+            position="attributes"
+        >
+                <attribute
+                name="t-elif"
+                separator=" "
+                add="and sale_order.is_verified"
+            />
+            </xpath>
+
+            <xpath
+            expr="//div[hasclass('justify-content-center')]"
+            position="replace"
+        />
+            <xpath expr="//div[hasclass('o_download_pdf')]" position="before">
+                <t
+                t-set="logged_user"
+                t-value="request.env.user.id != request.env.ref('base.public_user').id"
+            />
+                <a
+                role="button"
+                id="o_sale_portal_edit_order"
+                data-bs-toggle="modal"
+                data-bs-target="#modal_edit_order"
+                href="#"
+                title="Update Order"
+                class="mb8 fs-3 btn btn-lg btn-secondary bg-gradient fs-3"
+                t-if="sale_order.state in ('draft', 'sent') and logged_user and not sale_order.is_verified"
+            >
+                    <i class="fa fa-edit" /> <t>Update Order</t>
+                </a>
+            </xpath>
+            <xpath expr="//div[hasclass('o_portal_sale_sidebar')]" position="after">
+                <div
+                class="modal fade"
+                id="modal_edit_order"
+                tabindex="-1"
+                role="dialog"
+                aria-labelledby="modalEditOrderLabel"
+                aria-hidden="true"
+            >
+                    <div class="modal-dialog" role="document">
+                        <div class="modal-content">
+                            <div class="modal-header">
+                                <h5
+                                class="modal-title"
+                                id="modalEditOrderLabel"
+                            >Update Cart with Quotation Items</h5>
+                                <button
+                                type="button"
+                                class="btn-close"
+                                data-bs-dismiss="modal"
+                                aria-label="Close"
+                            />
+                            </div>
+                            <div
+                            class="modal-body"
+                            t-if="not request.session.get('edit_order_id')"
+                        >
+                                <p
+                            >Are you sure you want to load this quotation into your cart to update?</p>
+                                <p
+                            >Please note that doing so will remove any current items in your cart.</p>
+                            </div>
+                            <div
+                            class="modal-body"
+                            t-if="request.session.get('edit_order_id')"
+                        >
+                                <p>You are already editing another quotation.</p>
+                                <p>Please process that before updating this one.</p>
+                            </div>
+                            <div class="modal-footer">
+                                <button
+                                type="button"
+                                class="btn btn-secondary"
+                                data-bs-dismiss="modal"
+                            >Cancel</button>
+                                <a
+                                t-att-href="'/edit/quotation/%s?from_dialog=true' % sale_order.id"
+                                class="btn btn-primary"
+                                t-if="not request.session.get('edit_order_id')"
+                            >Confirm</a>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </xpath>
+        </template>
+    <template
+        id="configure_optional_products"
+        inherit_id="sale_product_configurator.configure_optional_products"
+    >
+        <xpath expr="//th[hasclass('td-img')]" position="attributes">
+            <attribute name="style">width: 10% !important;</attribute>
+        </xpath>
+        <xpath expr="//th[2]" position="attributes">
+            <attribute name="style">width: 68% !important;</attribute>
+        </xpath>
+        <xpath expr="//th[hasclass('td-qty')]" position="attributes">
+            <attribute name="style">width: 12% !important;</attribute>
+        </xpath>
+        <xpath expr="//th[hasclass('td-price')]" position="attributes">
+            <attribute name="style">width: 10% !important;</attribute>
+        </xpath>
+
+    </template>
+
+    <template id="cart_lines" inherit_id="website_sale.cart_lines">
+        <xpath expr="//strong[@t-field='line.name_short']" position="attributes">
+            <attribute name="t-field">line.product_id.name</attribute>
+        </xpath>
+        <xpath
+            expr="//t[@t-call='website_sale.cart_line_description_following_lines']"
+            position="replace"
+        >
+            <div t-attf-class="text-muted d-none d-md-block small">
+                <span t-field="line.description" />
+                <span t-field="line.configuration" />
+            </div>
+        </xpath>
+    </template>
+
+    <template id="products_item" inherit_id="website_sale.products_item">
+        <xpath expr="//div[hasclass('product_price')]" position="attributes">
+            <attribute name="class">product_price d-none</attribute>
+        </xpath>
+    </template>
+
+    <template id="extra_info" inherit_id="website_sale.extra_info">
+        <xpath expr="//div[@data-type='char']" position="before">
+            <div
+                class="mb-0 py-2 col-12 s_website_form_field"
+                data-type="char"
+                data-name="Field"
+            >
+                                                <div
+                    class="row s_col_no_resize s_col_no_bgcolor"
+                >
+                                                    <label
+                        class="col-form-label col-sm-auto s_website_form_label"
+                        style="width: 200px"
+                        for="sale3"
+                    >
+                                                        <span
+                            class="s_website_form_label_content"
+                        >Customer PO</span>
+                                                    </label>
+                                                    <div class="col-sm">
+                                                        <input
+                            id="sale3"
+                            type="text"
+                            class="form-control s_website_form_input"
+                            name="customer_po"
+                        />
+                                                    </div>
+                                                </div>
+                                            </div>
+            <div
+                class="mb-0 py-2 col-12 s_website_form_field"
+                data-type="char"
+                data-name="Field"
+            >
+                                                <div
+                    class="row s_col_no_resize s_col_no_bgcolor"
+                >
+                                                    <label
+                        class="col-form-label col-sm-auto s_website_form_label"
+                        style="width: 200px"
+                        for="sale4"
+                    >
+                                                        <span
+                            class="s_website_form_label_content"
+                        >Project RefNo</span>
+                                                    </label>
+                                                    <div class="col-sm">
+                                                        <input
+                            id="sale4"
+                            type="text"
+                            class="form-control s_website_form_input"
+                            name="project_ref_no"
+                        />
+                                                    </div>
+                                                </div>
+                                            </div>
+        </xpath>
+
+    </template>
+
+</odoo>
