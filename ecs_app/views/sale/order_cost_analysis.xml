@@ -1,0 +1,59 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<odoo>
+    <record id="order_cost_analysis_report_view_form" model="ir.ui.view">
+        <field name="name">order_cost_analysis_report_view_form</field>
+        <field name="model">sale.order</field>
+        <field name="priority">99</field>
+        <field name="arch" type="xml">
+            <form string="Order Cost Analysis">
+                <header>
+                    <button
+                        name="action_print_detailed_report"
+                        string="Print Detailed Report"
+                        class="fw-bolder btn btn-primary d-grid gap-2 col-12 mx-auto float-center"
+                        type="object"
+                        invisible="1"
+                    />
+                </header>
+                <field name="cost_structure_report" widget="html" />
+            </form>
+        </field>
+    </record>
+
+    <record id="order_cost_analysis_report_view_tree" model="ir.ui.view">
+        <field name="name">order_cost_analysis_report_view_tree</field>
+        <field name="model">sale.order</field>
+        <field name="arch" type="xml">
+            <tree>
+                <field name="name" />
+                <field name="total_components_cost" widget="monetary" />
+                <field name="total_operations_cost" widget="monetary" />
+                <field name="grand_total" widget="monetary" />
+            </tree>
+        </field>
+    </record>
+    <record id="action_order_cost_analysis_report" model="ir.actions.act_window">
+        <field name="name">Order Cost Analysis</field>
+        <field name="res_model">sale.order</field>
+        <field name="view_mode">tree,form</field>
+        <field name="view_id" ref="order_cost_analysis_report_view_tree" />
+        <field
+            name="view_ids"
+            eval="[(5, 0, 0),
+                          (0, 0, {'view_mode': 'tree', 'view_id': ref('order_cost_analysis_report_view_tree')}),
+                          (0, 0, {'view_mode': 'form', 'view_id': ref('order_cost_analysis_report_view_form')})]"
+        />
+        <field name="context">{'create': False, 'delete': False}</field>
+        <field
+            name="domain"
+        >[('state', 'in', ('sale', 'done')), ('done_mrp_production_count', '>', 0)]</field>
+    </record>
+
+    <menuitem
+        id="menu_order_cost_analysis_report"
+        action="action_order_cost_analysis_report"
+        parent="mrp.menu_mrp_reporting"
+        sequence="10"
+    />
+
+</odoo>
