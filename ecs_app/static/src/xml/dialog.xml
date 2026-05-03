@@ -1,0 +1,8 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<templates id="template" xml:space="preserve">
+    <t t-inherit="web.DialogWidget" t-inherit-mode="extension" owl="1">
+        <xpath expr="//div[hasclass('modal-dialog')]" position="attributes">
+            <attribute name="style">max-width: 75% !important;</attribute>
+        </xpath>
+    </t>
+</templates>
