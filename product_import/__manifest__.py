@@ -21,7 +21,7 @@
 #############################################################################
 {
     'name': 'Product Image from URL',
-    'version': '16.0.1.1.1',
+    'version': '19.0.1.1.1',
     'category': 'Sales',
     'summary': 'Product Images from Web URL and Path',
     'description': 'users can effortlessly import images by providing a web '

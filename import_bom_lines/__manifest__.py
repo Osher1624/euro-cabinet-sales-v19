@@ -2,7 +2,7 @@
     "name": "Import BOM Lines",
     "summary": """Import bom lines from CSV file""",
     "category": "Manufacturing/Manufacturing",
-    "version": "16.0.0.0.1",
+    "version": "19.0.0.0.1",
     "sequence": 1,
     "author": "Muhammad Awis",
     "website": "https://bit.ly/3GLgMwG",

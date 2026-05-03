@@ -2,7 +2,7 @@
     "name": "ECS APP",
     "summary": """ECS Customizations""",
     "category": "Sales/Sales",
-    "version": "16.0.0.2.8",
+    "version": "19.0.0.2.8",
     "sequence": 1,
     "author": "Muhammad Awis, MA",
     "website": "https://bit.ly/3GLgMwG",

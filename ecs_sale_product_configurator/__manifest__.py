@@ -3,7 +3,7 @@
 {
     #  Information
     'name': "ECS - Sale Product Configurator",
-    'version': '16.0.0.1.0',
+    'version': '19.0.0.1.0',
     'category': 'Customization',
     'summary': "Sale Product Category Configurator",
     'description': """
