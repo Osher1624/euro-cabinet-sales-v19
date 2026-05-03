@@ -1,6 +1,7 @@
 <?xml version="1.0" encoding="UTF-8" ?>
-<templates id="template" xml:space="preserve">
-    <t t-inherit="web.DialogWidget" t-inherit-mode="extension" owl="1">
+<templates xml:space="preserve">
+    <!-- Widen the product configurator dialog to 75% of viewport width -->
+    <t t-inherit="web.Dialog" t-inherit-mode="extension">
         <xpath expr="//div[hasclass('modal-dialog')]" position="attributes">
             <attribute name="style">max-width: 75% !important;</attribute>
         </xpath>
