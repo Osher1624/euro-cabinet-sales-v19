@@ -1,0 +1,67 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<odoo>
+    <record id="view_picking_form" model="ir.ui.view">
+        <field name="name">stock.picking.form</field>
+        <field name="model">stock.picking</field>
+        <field name="inherit_id" ref="stock.view_picking_form" />
+        <field name="arch" type="xml">
+            <xpath
+                expr="//field[@name='move_line_ids_without_package']"
+                position="attributes"
+            >
+                <attribute
+                    name="attrs"
+                >{'readonly': ['|', ('show_operations', '=', False), ('state', '=', 'cancel')], 'invisible': [('show_reserved', '=', False)]}</attribute>
+            </xpath>
+        </field>
+    </record>
+
+    <record id="view_stock_move_line_detailed_operation_tree" model="ir.ui.view">
+        <field name="name">stock.move.line.operations.tree</field>
+        <field name="model">stock.move.line</field>
+        <field
+            name="inherit_id"
+            ref="stock.view_stock_move_line_detailed_operation_tree"
+        />
+        <field name="priority" eval="8" />
+        <field name="arch" type="xml">
+            <xpath expr="//field[@name='location_id']" position="attributes">
+                <attribute
+                    name="attrs"
+                >{'column_invisible': [('parent.picking_type_code', '=', 'incoming')], 'readonly': ['|', ('state', '=', 'done'), ('move_id', '!=', False)]}</attribute>
+            </xpath>
+            <xpath expr="//field[@name='package_id']" position="attributes">
+                <attribute
+                    name="attrs"
+                >{'readonly': ['|', ('state', '=', 'done'), ('move_id', '!=', False)]}</attribute>
+            </xpath>
+            <xpath expr="//field[@name='result_package_id']" position="attributes">
+                <attribute
+                    name="attrs"
+                >{'readonly': ['|', ('state', '=', 'done'), ('move_id', '!=', False)]}</attribute>
+            </xpath>
+            <xpath expr="//field[@name='qty_done']" position="attributes">
+                <attribute
+                    name="attrs"
+                >{'readonly': ['|', ('state', '=', 'done'), ('move_id', '!=', False)]}</attribute>
+            </xpath>
+            <xpath expr="//field[@name='product_uom_id']" position="after">
+                <field name="printed" />
+            </xpath>
+        </field>
+    </record>
+
+    <record id="view_backorder_confirmation" model="ir.ui.view">
+        <field name="name">stock_backorder_confirmation</field>
+        <field name="model">stock.backorder.confirmation</field>
+        <field name="inherit_id" ref="stock.view_backorder_confirmation" />
+        <field name="arch" type="xml">
+            <xpath
+                expr="//button[@name='process_cancel_backorder']"
+                position="attributes"
+            >
+                <attribute name="invisible">1</attribute>
+            </xpath>
+        </field>
+    </record>
+</odoo>
