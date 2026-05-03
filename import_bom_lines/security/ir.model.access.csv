@@ -1,0 +1,2 @@
+"id","name","model_id:id","group_id:id","perm_read","perm_write","perm_create","perm_unlink"
+import_bom_lines.access_import_bom_lines,access_import_bom_lines,import_bom_lines.model_import_bom_lines,base.group_user,1,1,1,1
