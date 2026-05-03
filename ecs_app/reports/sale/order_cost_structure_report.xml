@@ -1,0 +1,273 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<odoo>
+    <template id="order_cost_structure">
+        <t t-call="web.basic_layout">
+            <t
+                t-call-assets="mrp_account_enterprise.assets_mrp_cost_structure_report"
+                t-js="False"
+            />
+            <t t-call-assets="web.assets_backend" t-js="true" />
+            <div class="page o_mrp_report_page">
+                <span class="text-center"><h1
+                        class="mt-2 mb-3 o_mrp_header o_mrp_header1"
+                    ><span t-esc="order.name" /> Cost Analysis Report</h1></span>
+
+                <t t-set="raw_materials" t-value="lines" />
+
+                <div class="accordion" id="rawMaterialAccordion">
+                    <!-- Global Header Table -->
+                    <table class="table o_mrp_report_table mb-0">
+                        <thead>
+                            <tr class="h4">
+                                <th
+                                    style="width: 33%;"
+                                    class="text-start o_mrp_report_line_header"
+                                >Component</th>
+                                <th
+                                    style="width: 33%;"
+                                    class="text-center o_mrp_report_line_header"
+                                >Total QTY</th>
+                                <th
+                                    style="width: 33%;"
+                                    class="text-end o_mrp_report_line_header"
+                                >Total Cost</th>
+                            </tr>
+                        </thead>
+                    </table>
+
+                    <!-- Product Cards -->
+                    <t t-set="grand_total_qty" t-value="0" />
+
+                    <t t-foreach="raw_materials.items()" t-as="rm_line">
+                        <t t-set="product" t-value="rm_line[0]" />
+                        <t t-set="moves" t-value="rm_line[1]" />
+                        <t t-set="total_qty" t-value="sum([m['qty'] for m in moves])" />
+                        <t
+                            t-set="total_cost"
+                            t-value="sum([m['cost'] for m in moves])"
+                        />
+                        <t
+                            t-set="accordion_id"
+                            t-value="'accordion-' + str(product.id)"
+                        />
+                        <t
+                            t-set="grand_total_qty"
+                            t-value="grand_total_qty+total_qty"
+                        />
+
+                        <div class="card mb-2 border-0 shadow-sm">
+                            <!-- Clickable Header Row as Table -->
+                            <div
+                                class="card-header p-0"
+                                t-att-id="'heading-' + str(product.id)"
+                            >
+                                <table class="table o_mrp_report_table mb-0">
+                                    <tbody>
+                                        <tr
+                                            class="bg-light h5"
+                                            t-att-data-bs-toggle="'collapse'"
+                                            t-att-data-bs-target="'#' + accordion_id"
+                                            t-att-aria-expanded="'false'"
+                                            t-att-aria-controls="accordion_id"
+                                            style="cursor: pointer;"
+                                        >
+
+                                            <td class="text-start" style="width: 33%;">
+                                                <span
+                                                    class="o_mrp_reports_web_action"
+                                                    t-esc="product.display_name"
+                                                    view-type="form"
+                                                    t-att-res-id="product.id"
+                                                    res-model="product.product"
+                                                />
+                                            </td>
+                                            <td class="text-center" style="width: 33%;">
+                                                <t t-esc="round(total_qty,2)" />
+                                            </td>
+                                            <td class="text-end" style="width: 33%;">
+                                                <t
+                                                    t-esc="total_cost"
+                                                    t-options='{"widget": "monetary", "display_currency": currency}'
+                                                />
+                                            </td>
+                                        </tr>
+                                    </tbody>
+                                </table>
+                            </div>
+
+                            <!-- Collapsible Detail Table -->
+                            <div
+                                t-att-class="collapse_show"
+                                t-att-id="accordion_id"
+                                t-att-aria-labelledby="'heading-' + str(product.id)"
+                            >
+                                <div class="card-body p-0">
+                                    <table class="table o_mrp_report_table mb-0">
+                                        <thead>
+                                            <tr class="h6">
+                                                <th
+                                                    style="width: 15%;"
+                                                    class="text-start o_mrp_report_line_header"
+                                                >MO</th>
+                                                <th
+                                                    style="width: 35%;"
+                                                    class="text-start o_mrp_report_line_header"
+                                                >Product</th>
+                                                <th
+                                                    style="width: 15%;"
+                                                    class="text-start o_mrp_report_line_header"
+                                                >QTY</th>
+                                                <th
+                                                    style="width: 16.7%;"
+                                                    class="text-center o_mrp_report_line_header"
+                                                >Unit Cost</th>
+                                                <th
+                                                    style="width: 20%;"
+                                                    class="text-end o_mrp_report_line_header"
+                                                >Subtotal Cost</th>
+                                            </tr>
+                                        </thead>
+                                        <tbody>
+                                            <tr
+                                                t-foreach="moves"
+                                                t-as="m"
+                                                class="text-muted h6"
+                                            >
+                                                <td
+                                                    class="text-start"
+                                                    style="width: 15%;"
+                                                >
+                                                    <a
+                                                        class="o_mrp_reports_web_action"
+                                                        t-attf-href="/web#id=#{m['mo'].id}&amp;view_type=form&amp;model=mrp.production"
+                                                        target="_blank"
+                                                    > <span
+                                                            t-esc="m['mo'].display_name"
+                                                        /></a>
+                                                </td>
+                                                <td
+                                                    class="text-start"
+                                                    style="width: 35%;"
+                                                >
+                                                    <a
+                                                        class="o_mrp_reports_web_action"
+                                                        t-attf-href="/web#id=#{m['mo'].product_id.id}&amp;view_type=form&amp;model=product.product"
+                                                        target="_blank"
+                                                    > <span
+                                                            t-esc="m['mo'].product_id.display_name"
+                                                        /></a>
+                                                </td>
+                                                <td
+                                                    class="text-start"
+                                                    style="width: 16.7%;"
+                                                >
+                                                    <span
+                                                        t-esc="m['qty']"
+                                                        t-options='{"widget": "float", "decimal_precision": "Product Unit of Measure"}'
+                                                    />
+                                                    <span t-esc="product.uom_id.name" />
+                                                </td>
+                                                <td
+                                                    class="text-center"
+                                                    style="width: 15%;"
+                                                >
+                                                    <span
+                                                        t-esc="m['cost'] / m['qty'] if m['qty'] else m['cost']"
+                                                        t-options='{"widget": "monetary", "display_currency": currency}'
+                                                    />
+                                                </td>
+                                                <td
+                                                    class="text-end"
+                                                    style="width: 20%;"
+                                                >
+                                                    <span
+                                                        t-esc="m['cost']"
+                                                        t-options='{"widget": "monetary", "display_currency": currency}'
+                                                    />
+                                                </td>
+                                            </tr>
+                                        </tbody>
+                                    </table>
+                                </div>
+                            </div>
+                        </div>
+                    </t>
+
+                    <table class="table o_mrp_report_table mb-0">
+                        <thead>
+                            <tr class="fw-bold  h5">
+                                <th
+                                    style="width: 33%;"
+                                    class="text-start o_mrp_report_line_header"
+                                >Total Components Cost</th>
+                                <th
+                                    style="width: 33%;"
+                                    class="text-center o_mrp_report_line_header"
+                                >
+                                    <span t-esc="round(grand_total_qty,2)" />
+                                </th>
+                                <th
+                                    style="width: 33%;"
+                                    class="text-end o_mrp_report_line_header"
+                                >
+                                    <span
+                                        t-esc="total_components_cost"
+                                        t-options='{"widget": "monetary", "display_currency": currency}'
+                                    />
+                                </th>
+                            </tr>
+                        </thead>
+                    </table>
+
+                    <table class="tm-5 table o_mrp_report_table mb-0">
+                        <thead>
+                            <tr class="fw-bold h5">
+                                <th
+                                    style="width: 50%;"
+                                    class="text-start o_mrp_report_line_header"
+                                >Total Operations Cost</th>
+                                <th
+                                    style="width:50%;"
+                                    class="text-end o_mrp_report_line_header"
+                                >
+                                    <span
+                                        t-esc="total_operations_cost"
+                                        t-options='{"widget": "monetary", "display_currency": currency}'
+                                    />
+                                </th>
+                            </tr>
+                            <tr class="text-dark fw-bold h4">
+                                <th
+                                    style="width: 51%;"
+                                    class="text-start o_mrp_report_line_header"
+                                >Grand Total Cost</th>
+                                <th
+                                    style="width: 49%;"
+                                    class="text-end o_mrp_report_line_header"
+                                >
+                                    <span
+                                        t-esc="total_components_cost + total_operations_cost"
+                                        t-options='{"widget": "monetary", "display_currency": currency}'
+                                    />
+                                </th>
+                            </tr>
+                        </thead>
+                    </table>
+                </div>
+            </div>
+        </t>
+    </template>
+
+    <record id="action_cost_struct_order_template" model="ir.actions.report">
+        <field name="name">Order Cost Structure Analysis</field>
+        <field name="model">sale.order</field>
+        <field name="report_type">qweb-pdf</field>
+        <field name="report_name">ecs_app.order_cost_structure</field>
+        <field name="report_file">ecs_app.order_cost_structure</field>
+        <field
+            name="print_report_name"
+        >'Order Cost Structure Analysis - %s' % object.name</field>
+        <field name="binding_type">report</field>
+    </record>
+
+</odoo>
