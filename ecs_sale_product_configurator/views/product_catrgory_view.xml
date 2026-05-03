@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data>
+        <!-- INHERITED PRODUCT CATEGORY FORM VIEW -->
+        <record id="view_category_property_form_stock_inherit_ecs" model="ir.ui.view">
+            <field name="name">product.category.property.form.inherit.ecs</field>
+            <field name="model">product.category</field>
+            <field name="inherit_id" ref="stock_account.view_category_property_form_stock"/>
+            <field name="arch" type="xml">
+                <xpath expr="//field[@name='property_cost_method']/.." position="inside">
+                    <label for="is_show_global_info"/>
+                    <div name="Global Info">
+                        <field name="is_show_global_info"/>
+                    </div>
+                    <label for="product_attribute_ids"/>
+                    <div name="Product Attribute's">
+                      <field name="product_attribute_ids" widget="many2many_tags"/>
+                    </div>
+                </xpath>
+            </field>
+        </record>
+    </data>
+</odoo>
