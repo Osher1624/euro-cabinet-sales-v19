@@ -1,0 +1,125 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<odoo>
+    <record id="product_attribute_view_form" model="ir.ui.view">
+        <field name="name">product.attribute.form</field>
+        <field name="model">product.attribute</field>
+        <field name="inherit_id" ref="product.product_attribute_view_form" />
+        <field name="priority" eval="8" />
+        <field name="arch" type="xml">
+            <xpath expr="//field[@name='name']" position="after">
+                <field
+                    name="order_line_display"
+                    groups="product.group_product_variant"
+                />
+            </xpath>
+            <xpath
+                expr="//field[@name='value_ids']/tree//field[@name='is_custom']"
+                position="after"
+            >
+                <field
+                    name="order_line_display"
+                    groups="product.group_product_variant"
+                />
+            </xpath>
+            <xpath
+                expr="//field[@name='value_ids']/tree//field[@name='sequence']"
+                position="after"
+            >
+                <field name="id" readonly="1" />
+            </xpath>
+        </field>
+    </record>
+
+    <record id="attribute_tree_view" model="ir.ui.view">
+        <field name="name">product.attribute.tree</field>
+        <field name="model">product.attribute</field>
+        <field name="inherit_id" ref="product.attribute_tree_view" />
+        <field name="arch" type="xml">
+            <xpath expr="//field[@name='sequence']" position="after">
+                <field name="id" optional="show" />
+            </xpath>
+            <xpath expr="//field[@name='category_id']" position="after">
+                <field name="related_attribute_id" optional="show" />
+            </xpath>
+            <xpath expr="//field[@name='display_type']" position="after">
+                <field name="number_related_products" optional="show" />
+            </xpath>
+        </field>
+    </record>
+
+    <record id="product_template_attribute_line_view_tree" model="ir.ui.view">
+        <field name="name">product_template_attribute_line_view_tree</field>
+        <field name="model">product.template.attribute.line</field>
+        <field name="arch" type="xml">
+            <tree
+                multi_edit="1"
+                default_order="product_tmpl_id, id"
+                create="false"
+                delete="false"
+            >
+                <field name="product_tmpl_id" readonly="1" />
+                <field name="attribute_id" readonly="1" />
+                <field
+                    name="value_ids"
+                    widget="many2many_tags"
+                    options="{'no_create_edit': True, 'color_field': 'color'}"
+                    context="{'default_attribute_id': attribute_id, 'show_attribute': False}"
+                />
+            </tree>
+        </field>
+    </record>
+
+    <record id="product_template_attribute_line_search_view" model="ir.ui.view">
+        <field name="name">product_template_attribute_line.search</field>
+        <field name="model">product.template.attribute.line</field>
+        <field name="arch" type="xml">
+            <search>
+                <group expand='0' string='Group by...'>
+                    <filter
+                        string="Product"
+                        name="product_tmpl_id"
+                        context="{'group_by': 'product_tmpl_id'}"
+                    />
+                </group>
+            </search>
+        </field>
+    </record>
+
+    <record id="product_template_attribute_line_action" model="ir.actions.act_window">
+        <field name="name">Product Template Attribute Lines</field>
+        <field name="type">ir.actions.act_window</field>
+        <field name="res_model">product.template.attribute.line</field>
+        <field
+            name="view_ids"
+            eval="[(5, 0, 0),
+                   (0, 0, {'view_mode': 'tree', 'view_id': ref('ecs_app.product_template_attribute_line_view_tree')})]"
+        />
+        <field name="view_mode">tree</field>
+        <field name="context">{
+            'search_default_product_tmpl_id': 1,
+            }
+        </field>
+    </record>
+
+    <record id="product_template_attribute_value_view_tree" model="ir.ui.view">
+        <field name="name">product.template.attribute.value.view.tree</field>
+        <field name="model">product.template.attribute.value</field>
+        <field
+            name="inherit_id"
+            ref="product.product_template_attribute_value_view_tree"
+        />
+        <field name="arch" type="xml">
+            <xpath expr="//field[@name='attribute_id']" position="after">
+                <field name="create_date" optional="show" />
+            </xpath>
+        </field>
+    </record>
+
+    <menuitem
+        id="product_template_attribute_line_menu"
+        parent="sale.product_menu_catalog"
+        action="product_template_attribute_line_action"
+        sequence="11"
+    />
+
+</odoo>
