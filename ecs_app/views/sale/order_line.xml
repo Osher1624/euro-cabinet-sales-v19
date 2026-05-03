@@ -17,7 +17,7 @@
         <field name="name">direct_order_line_view_tree</field>
         <field name="model">sale.order.line</field>
         <field name="arch" type="xml">
-            <tree>
+            <list>
                 <button
                     name="action_open_order"
                     type="object"
@@ -68,7 +68,7 @@
                 <field name="invoice_status" invisible="1" />
                 <field name="currency_id" invisible="1" />
                 <field name="price_tax" invisible="1" />
-            </tree>
+            </list>
         </field>
     </record>
 
@@ -76,7 +76,7 @@
         <field name="name">Order Lines</field>
         <field name="type">ir.actions.act_window</field>
         <field name="res_model">sale.order.line</field>
-        <field name="view_mode">tree,form</field>
+        <field name="view_mode">list,form</field>
         <field name="view_id" ref="direct_order_line_view_tree" />
         <field name="domain">[('display_type', '=', False)]</field>
         <field name="context">{'create': False, 'edit': False,

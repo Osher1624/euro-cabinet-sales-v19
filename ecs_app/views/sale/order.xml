@@ -157,7 +157,7 @@
             <xpath expr="//page[@name='order_lines']" position="after">
                 <page string="Section Adjustment">
                     <field name="section_order_line">
-                        <tree
+                        <list
                             create="false"
                             delete="false"
                             editable="bottom"
@@ -174,7 +174,7 @@
                                 decoration-bf="1"
                                 invisible="[('display_type', 'not in', ('line_section', 'line_note'))]"
                             />
-                        </tree>
+                        </list>
                     </field>
                 </page>
             </xpath>

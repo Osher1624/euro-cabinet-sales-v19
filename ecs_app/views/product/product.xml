@@ -101,7 +101,7 @@
                         widget="one2many"
                         context="{'show_attribute': False}"
                     >
-                        <tree editable="bottom">
+                        <list editable="bottom">
                             <field
                                 name="attribute_id"
                                 options="{'no_create_edit': True,'no_create': True, 'no_quick_create': True, 'no_open': True}"
@@ -113,7 +113,7 @@
                                 options="{'no_create_edit': True,'no_create': True, 'no_quick_create': True, 'no_open': True, 'color_field': 'color'}"
                                 context="{'default_attribute_id': attribute_id, 'show_attribute': False}"
                             />
-                        </tree>
+                        </list>
                     </field>
                 </page>
             </xpath>

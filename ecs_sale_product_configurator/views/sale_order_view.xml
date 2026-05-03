@@ -10,7 +10,7 @@
                 <page name="customer_signature" position="after">
                     <page string="Global Info" name="global_info">
                         <field name="sale_attribute_ids"  widget="section_and_note_one2many" class="o_sale_product_attribute_one2many">
-                            <tree tring="Product Attribute" editable="bottom">
+                            <list tring="Product Attribute" editable="bottom">
                                 <control>
                                     <create name="add_product_control" string="Add a product"/>
                                     <create name="add_section_control" string="Add a section" context="{'default_display_type': 'line_section'}"/>
@@ -31,7 +31,7 @@
                                     options="{'no_create_edit': True}"
                                     context="{'default_attribute_id': product_attribute_id}"
                                     domain="[('attribute_id', '=', product_attribute_id)]"/>
-                            </tree>
+                            </list>
                         </field>
                     </page>
                 </page>

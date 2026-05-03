@@ -24,23 +24,23 @@
         <field name="name">order_cost_analysis_report_view_tree</field>
         <field name="model">sale.order</field>
         <field name="arch" type="xml">
-            <tree>
+            <list>
                 <field name="name" />
                 <field name="total_components_cost" widget="monetary" />
                 <field name="total_operations_cost" widget="monetary" />
                 <field name="grand_total" widget="monetary" />
-            </tree>
+            </list>
         </field>
     </record>
     <record id="action_order_cost_analysis_report" model="ir.actions.act_window">
         <field name="name">Order Cost Analysis</field>
         <field name="res_model">sale.order</field>
-        <field name="view_mode">tree,form</field>
+        <field name="view_mode">list,form</field>
         <field name="view_id" ref="order_cost_analysis_report_view_tree" />
         <field
             name="view_ids"
             eval="[(5, 0, 0),
-                          (0, 0, {'view_mode': 'tree', 'view_id': ref('order_cost_analysis_report_view_tree')}),
+                          (0, 0, {'view_mode': 'list', 'view_id': ref('order_cost_analysis_report_view_tree')}),
                           (0, 0, {'view_mode': 'form', 'view_id': ref('order_cost_analysis_report_view_form')})]"
         />
         <field name="context">{'create': False, 'delete': False}</field>
