@@ -1,0 +1,6 @@
+id,name,model_id:id,group_id:id,perm_read,perm_write,perm_create,perm_unlink
+ecs_app.access_attribute_value_setup,access_attribute_value_setup,ecs_app.model_attribute_value_setup,base.group_user,1,1,1,1
+ecs_app.access_mrp_bom_template_user,mrp.bom.template.user,ecs_app.model_mrp_bom_template,mrp.group_mrp_user,1,0,0,0
+ecs_app.access_mrp_bom_template_manager,mrp.bom.template.manager,ecs_app.model_mrp_bom_template,mrp.group_mrp_manager,1,1,1,1
+ecs_app.access_mrp_bom_template_line_user,mrp.bom.template.line.user,ecs_app.model_mrp_bom_template_line,mrp.group_mrp_user,1,0,0,0
+ecs_app.access_mrp_bom_template_line_manager,mrp.bom.template.line.manager,ecs_app.model_mrp_bom_template_line,mrp.group_mrp_manager,1,1,1,1
