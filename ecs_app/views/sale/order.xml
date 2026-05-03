@@ -1,0 +1,215 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<odoo>
+    <record id="view_order_form" model="ir.ui.view">
+        <field name="name">sale.order.form</field>
+        <field name="model">sale.order</field>
+        <field name="priority">99</field>
+        <field name="inherit_id" ref="sale.view_order_form" />
+        <field name="arch" type="xml">
+            <xpath expr="//field[@name='state']" position="before">
+                <field name="is_verified" invisible="1" />
+                <button
+                    name="update_order_line_info"
+                    type="object"
+                    string="Update Order Line Info"
+                    class="update_order_line_info d-none"
+                    context="{'update_order_line_info': True}"
+                />
+                <button
+                    name="verify_order"
+                    type="object"
+                    string="Verify Order"
+                    attrs="{'invisible': ['|',('is_verified', '=', True), ('state', 'not in', ('draft','sent'))]}"
+                />
+            </xpath>
+            <xpath expr="//field[@name='sale_order_template_id']" position="attributes">
+                <attribute name="groups">sales_team.group_sale_manager</attribute>
+            </xpath>
+            <xpath expr="//field[@name='payment_term_id']" position="after">
+                <field
+                    name="check_if_processed"
+                    groups="sales_team.group_sale_manager"
+                />
+                <field name="list_all_items" />
+                <field name="customer_po" />
+                <field name="project_ref_no" />
+            </xpath>
+            <xpath expr="//field[@name='order_line']/tree" position="attributes">
+                <attribute name="limit">250</attribute>
+            </xpath>
+            <xpath
+                expr="//field[@name='order_line']/tree//field[@name='sequence']"
+                position="replace"
+            >
+                <field name="sequence" invisible="1" />
+                <field name="line_number" readonly="1" decoration-bf="1" />
+                <field name="is_optional_line" invisible="1" />
+                <field name="optional_for" invisible="1" />
+                <field name="linked_line_id" invisible="1" />
+            </xpath>
+            <xpath
+                expr="//field[@name='order_line']/tree//field[@name='product_id']"
+                position="attributes"
+            >
+                <attribute name="invisible">1</attribute>
+            </xpath>
+            <xpath
+                expr="//field[@name='order_line']/tree//field[@name='discount']"
+                position="attributes"
+            >
+                <attribute name="invisible">1</attribute>
+            </xpath>
+            <xpath
+                expr="//field[@name='order_line']/tree//field[@name='tax_id']"
+                position="attributes"
+            >
+                <attribute name="invisible">1</attribute>
+            </xpath>
+            <xpath
+                expr="//field[@name='order_line']/tree//field[@name='product_packaging_qty']"
+                position="attributes"
+            >
+                <attribute name="invisible">1</attribute>
+            </xpath>
+            <xpath
+                expr="//field[@name='order_line']/tree//field[@name='product_packaging_id']"
+                position="attributes"
+            >
+                <attribute name="invisible">1</attribute>
+            </xpath>
+            <xpath
+                expr="//field[@name='order_line']/tree//field[@name='purchase_price']"
+                position="attributes"
+            >
+                <attribute name="groups">sales_team.group_sale_manager</attribute>
+            </xpath>
+            <xpath
+                expr="//field[@name='order_line']/tree//field[@name='margin']"
+                position="attributes"
+            >
+                <attribute name="groups">sales_team.group_sale_manager</attribute>
+            </xpath>
+            <xpath expr="//field[@name='show_update_pricelist']" position="before">
+                <field name="commitment_date" string="Delivery Date" />
+            </xpath>
+            <xpath
+                expr="//field[@name='order_line']/tree//field[@name='product_uom_qty']"
+                position="replace"
+            />
+            <xpath
+                expr="//field[@name='order_line']/tree//field[@name='name']"
+                position="replace"
+            >
+                <field
+                    name="name"
+                    class="hide_column"
+                    required="0"
+                    attrs="{'invisible': [('display_type', 'not in', ('line_section', 'line_note'))]}"
+                />
+                <field name="description" class="text-wrap" />
+                <field name="configuration" />
+                <field name="product_domain" invisible="1" />
+                <field
+                    name="product_uom_qty"
+                    decoration-info="(not display_type and invoice_status == 'to invoice')"
+                    decoration-bf="(not display_type and invoice_status == 'to invoice')"
+                    context="{'partner_id': parent.partner_id,'quantity': product_uom_qty,
+                       'pricelist': parent.pricelist_id,'uom': product_uom,
+                       'company_id': parent.company_id}"
+                />
+            </xpath>
+            <xpath
+                expr="//field[@name='order_line']/tree//field[@name='price_unit']"
+                position="attributes"
+            >
+                <attribute name="digits">[12,2]</attribute>
+            </xpath>
+            <xpath
+                expr="//field[@name='order_line']/tree//field[@name='product_id']"
+                position="attributes"
+            >
+                <attribute
+                    name="options"
+                >{'no_create_edit': True,'no_create': True, 'no_quick_create': True, 'no_open': True}</attribute>
+                <attribute name="domain">product_domain</attribute>
+            </xpath>
+            <xpath
+                expr="//field[@name='order_line']/tree//field[@name='product_template_id']"
+                position="attributes"
+            >
+                <attribute
+                    name="options"
+                >{'no_create_edit': True,'no_create': True, 'no_quick_create': True, 'no_open': True}</attribute>
+                <attribute name="domain">product_domain</attribute>
+            </xpath>
+            <xpath
+                expr="//field[@name='order_line']/form//field[@name='price_unit']"
+                position="attributes"
+            >
+                <attribute name="digits">[12,2]</attribute>
+            </xpath>
+            <xpath
+                expr="//field[@name='order_line']/kanban//field[@name='price_unit']"
+                position="attributes"
+            >
+                <attribute name="digits">[12,2]</attribute>
+            </xpath>
+            <xpath expr="//page[@name='order_lines']" position="after">
+                <page string="Section Adjustment">
+                    <field name="section_order_line">
+                        <tree
+                            create="false"
+                            delete="false"
+                            editable="bottom"
+                            limit="150"
+                        >
+                            <field name="sequence" widget="handle" />
+                            <field name="display_type" invisible="1" />
+                            <field
+                                name="name"
+                                readonly="1"
+                                required="1"
+                                srting="Sections"
+                                widget="section_and_note_text"
+                                decoration-bf="1"
+                                attrs="{'invisible': [('display_type', 'not in', ('line_section', 'line_note'))]}"
+                            />
+                        </tree>
+                    </field>
+                </page>
+            </xpath>
+        </field>
+    </record>
+
+    <record id="view_quotation_tree" model="ir.ui.view">
+        <field name="name">sale.order.tree</field>
+        <field name="model">sale.order</field>
+        <field name="inherit_id" ref="sale.view_quotation_tree" />
+        <field name="arch" type="xml">
+            <xpath expr="//field[@name='partner_id']" position="after">
+                <field name="client_order_ref" optional="show" />
+            </xpath>
+            <xpath expr="//field[@name='state']" position="after">
+                <field optional="show" name="processed" />
+                <field optional="show" name="check_if_processed" />
+            </xpath>
+        </field>
+    </record>
+
+    <record id="view_order_form_inherit_sale_stock_qty" model="ir.ui.view">
+        <field name="name">sale.order.line.tree.sale.stock.qty</field>
+        <field name="model">sale.order</field>
+        <field name="priority">99</field>
+        <field
+            name="inherit_id"
+            ref="sale_stock.view_order_form_inherit_sale_stock_qty"
+        />
+        <field name="arch" type="xml">
+            <xpath
+                expr="//page/field[@name='order_line']/tree/widget[@name='qty_at_date_widget']"
+                position="replace"
+            />
+        </field>
+    </record>
+
+</odoo>
