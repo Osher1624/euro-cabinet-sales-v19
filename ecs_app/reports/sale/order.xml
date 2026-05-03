@@ -1,0 +1,95 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<odoo>
+    <template
+        id="report_saleorder_document"
+        inherit_id="sale.report_saleorder_document"
+        priority="99"
+    >
+        <xpath expr="//th[@name='th_description']" position="before">
+            <th name="th_line_number" class="text-start">LN#</th>
+            <th name="th_product" class="text-start">Products</th>
+        </xpath>
+        <xpath expr="//th[@name='th_quantity']" position="replace">
+            <th name="th_quantity" class="text-end">QTY</th>
+        </xpath>
+        <xpath expr="//th[@name='th_priceunit']" position="replace">
+            <th name="th_priceunit" class="text-end">Price</th>
+        </xpath>
+        <xpath expr="//th[@name='th_description']" position="after">
+            <th name="th_config" class="text-start">Configuration</th>
+        </xpath>
+        <xpath expr="//td[@name='td_name']" position="replace">
+            <td name="td_line_number"><span t-field="line.line_number" /></td>
+            <td name="td_name"><span t-field="line.product_id.name" /></td>
+            <td name="td_description"><span
+                    t-field="line.description"
+                    class="text-wrap"
+                /></td>
+            <td name="td_configuration"><span t-field="line.configuration" /></td>
+        </xpath>
+        <xpath expr="//td[@name='td_priceunit']" position="replace">
+            <td name="td_priceunit" class="text-end">
+                <span
+                    t-field="line.price_unit"
+                    t-options='{"widget": "float", "precision": 2}'
+                />
+            </td>
+        </xpath>
+    </template>
+
+    <template
+        id="sale_order_portal_content"
+        name="ECS Products Portal"
+        priority="99"
+        inherit_id="sale.sale_order_portal_content"
+    >
+        <xpath expr="//th[@id='product_name_header']" position="before">
+            <th class="text-start">LN#</th>
+        </xpath>
+        <xpath expr="//th[normalize-space(text())='Quantity']" position="replace">
+            <th class="text-end">QTY</th>
+        </xpath>
+        <xpath expr="//th[normalize-space(text())='Unit Price']" position="replace">
+            <th
+                t-attf-class="text-end {{ 'd-none d-sm-table-cell' if report_type == 'html' else '' }}"
+            >
+                Price
+            </th>
+        </xpath>
+        <xpath expr="//th[@id='product_name_header']" position="after">
+            <th class="text-start text-wrap">Description</th>
+            <th class="text-start">Configuration</th>
+        </xpath>
+        <xpath expr="//td[@id='product_name']" position="before">
+            <td id="line_line_number">
+                <span t-field="line.line_number" class="fw-bold" />
+            </td>
+        </xpath>
+        <xpath expr="//td[@id='product_name']" position="after">
+            <td id="line_description">
+                <span t-field="line.description" class="text-wrap" />
+            </td>
+            <td id="line_configuration">
+                <span t-field="line.configuration" />
+            </td>
+        </xpath>
+        <xpath expr="//td[@id='product_name']" position="replace">
+            <td id="product_name">
+                <span t-field="line.product_id.name" />
+            </td>
+        </xpath>
+        <xpath expr="//div[@t-field='line.price_unit']" position="attributes">
+            <attribute name="t-options">{'widget': 'float', 'precision': 2}</attribute>
+        </xpath>
+        <xpath expr="//div[@t-if='line.discount']" position="replace">
+            <div t-if="line.discount">
+                <t
+                    t-out="(1-line.discount / 100.0) * line.price_unit"
+                    t-options='{"widget": "float", "precision": 2}'
+                />
+            </div>
+        </xpath>
+    </template>
+
+
+</odoo>
