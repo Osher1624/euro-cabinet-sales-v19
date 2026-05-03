@@ -1,0 +1,62 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data>
+        <!-- INHERITED SALE ORDER FORM VIEW -->
+        <record id="view_order_form_inherit_ecs" model="ir.ui.view">
+            <field name="name">sale.order.form.inherit.ecs</field>
+            <field name="model">sale.order</field>
+            <field name="inherit_id" ref="sale.view_order_form"/>
+            <field name="arch" type="xml">
+                <page name="customer_signature" position="after">
+                    <page string="Global Info" name="global_info">
+                        <field name="sale_attribute_ids"  widget="section_and_note_one2many" class="o_sale_product_attribute_one2many">
+                            <tree tring="Product Attribute" editable="bottom">
+                                <control>
+                                    <create name="add_product_control" string="Add a product"/>
+                                    <create name="add_section_control" string="Add a section" context="{'default_display_type': 'line_section'}"/>
+                                </control>
+                                <field name="sequence" widget="handle"/>
+                                <field name="display_type" invisible="True"/>
+                                <field name="name" widget="section_and_note_text"
+                                    attrs="{'readonly': [('display_type', '=', False)]}"/>
+                                <field name="product_category_id" />
+                                <field name="category_attribute_ids" invisible="1"/>
+                                <field name="product_attribute_id" width="40%"
+                                    domain="[('id', 'in', category_attribute_ids)]"/>
+                                <field name="attribute_value_ids" widget="many2many_tags"
+                                    options="{'no_create_edit': True, 'color_field': 'color'}"
+                                    context="{'default_attribute_id': product_attribute_id}"
+                                    domain="[('attribute_id', '=', product_attribute_id)]" invisible="1"/>
+                                <field name="attribute_value_id"
+                                    options="{'no_create_edit': True}"
+                                    context="{'default_attribute_id': product_attribute_id}"
+                                    domain="[('attribute_id', '=', product_attribute_id)]"/>
+                            </tree>
+                        </field>
+                    </page>
+                </page>
+                <field name="product_type" position="before">
+                    <field name="order_id" invisible="1"/>
+                </field>
+                <field name="product_template_id" position="before">
+                    <field name="order_id" invisible="1"/>
+                </field>
+                <field name="product_template_id" position="attributes">
+                    <attribute name="context">{
+                        'partner_id': parent.partner_id,
+                        'quantity': product_uom_qty,
+                        'pricelist': parent.pricelist_id,
+                        'uom':product_uom,
+                        'company_id': parent.company_id,
+                        'default_list_price': price_unit,
+                        'default_description_sale': name,
+                        'default_sale_order': order_id,
+                    }</attribute>
+                </field>
+                <header position="inside">
+                    <button name="action_configure_product_attribute" type="object" string="Configure Attribute"/>
+                </header>
+            </field>
+        </record>
+    </data>
+</odoo>
